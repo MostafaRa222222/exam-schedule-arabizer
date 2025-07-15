@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -157,7 +158,7 @@ const Index = () => {
     const newWindow = window.open('', '_blank');
     if (!newWindow) return;
 
-    const tableHtml = createTableHTML(selectedSubjectData);
+    const tableHtml = createTableHTML(selectedSubjectData, false);
     newWindow.document.write(tableHtml);
     newWindow.document.close();
   };
@@ -172,7 +173,7 @@ const Index = () => {
 
     // Create a temporary div to render the table for image conversion
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = createTableHTML(selectedSubjectData);
+    tempDiv.innerHTML = createTableHTML(selectedSubjectData, true);
     tempDiv.style.position = 'absolute';
     tempDiv.style.left = '-9999px';
     tempDiv.style.background = 'white';
@@ -201,14 +202,20 @@ const Index = () => {
     });
   };
 
-  const createTableHTML = (selectedSubjectData: Subject[]) => {
+  const createTableHTML = (selectedSubjectData: Subject[], isForImage: boolean = false) => {
     const colorMap = {
       purple: '#8B5CF6',
       black: '#1F2937',
       pink: '#EC4899',
       blue: '#3B82F6',
       green: '#10B981',
-      red: '#EF4444'
+      red: '#EF4444',
+      orange: '#F97316',
+      teal: '#14B8A6',
+      indigo: '#6366F1',
+      amber: '#F59E0B',
+      emerald: '#059669',
+      cyan: '#06B6D4'
     };
 
     const fontWeightMap = {
@@ -224,7 +231,17 @@ const Index = () => {
       'النجاح ثمرة الجهد والمثابرة 💪',
       'اجتهد اليوم لتحصد النجاح غداً 🎓',
       'كل خطوة تخطوها تقربك من هدفك 🚀',
-      'الثقة بالنفس أول خطوات النجاح ✨'
+      'الثقة بالنفس أول خطوات النجاح ✨',
+      'لا تستسلم أبداً، فالنجاح قريب 🌈',
+      'العلم نور والجهل ظلام 📚',
+      'من جد وجد ومن زرع حصد 🌱',
+      'الطموح لا يعرف المستحيل 🎯',
+      'اليوم تعب وغداً نجاح 💎',
+      'ابذل جهدك وتوكل على الله 🤲',
+      'كل امتحان فرصة لتثبت قدراتك 🏆',
+      'الإصرار والعزيمة مفتاح النجاح 🗝️',
+      'أحلامك تنتظرك، فلا تخذلها 🌟',
+      'التميز ليس صدفة بل نتيجة جهد 👑'
     ];
 
     const motivationPhrase = includeMotivation 
@@ -278,6 +295,20 @@ const Index = () => {
         return dateA.getTime() - dateB.getTime();
       });
 
+      let tableRows = '';
+      sortedDates.forEach((date, dateIndex) => {
+        const dateSubjects = groupedByDate[date];
+        dateSubjects.forEach((subject, subIndex) => {
+          tableRows += `
+            <tr style="background-color: ${dateIndex % 2 === 0 ? '#f8f9fa' : 'white'};">
+              ${subIndex === 0 ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; vertical-align: middle; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;" rowspan="${dateSubjects.length}">${date}</td>` : ''}
+              <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px;">${subject.name}</td>
+              <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; font-weight: 500;">${subject.examTime}</td>
+            </tr>
+          `;
+        });
+      });
+
       tableContent = `
         <table style="width: 100%; border-collapse: collapse; font-family: 'Cairo', Arial, sans-serif; font-weight: ${fontWeightMap[textFormat as keyof typeof fontWeightMap]}; border: 3px solid ${colorMap[tableColor as keyof typeof colorMap]};">
           <thead>
@@ -288,16 +319,7 @@ const Index = () => {
             </tr>
           </thead>
           <tbody>
-            ${sortedDates.map((date, index) => {
-              const dateSubjects = groupedByDate[date];
-              return dateSubjects.map((subject, subIndex) => `
-                <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
-                  ${subIndex === 0 ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; vertical-align: middle; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;" rowspan="${dateSubjects.length}">${date}</td>` : ''}
-                  <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px;">${subject.name}</td>
-                  <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; font-weight: 500;">${subject.examTime}</td>
-                </tr>
-              `).join('');
-            }).join('')}
+            ${tableRows}
           </tbody>
         </table>
       `;
@@ -407,6 +429,7 @@ const Index = () => {
             color: #856404;
             font-weight: 600;
           }
+          ${!isForImage ? `
           .stats {
             display: flex;
             justify-content: center;
@@ -430,19 +453,20 @@ const Index = () => {
             font-size: 1em;
             color: #666;
             font-weight: 500;
-          }
+          }` : ''}
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
             <h1>📚 جدول الامتحانات</h1>
+            ${!isForImage ? `
             <div class="stats">
               <div class="stat-item">
                 <div class="stat-number">${selectedSubjectData.length}</div>
                 <div class="stat-label">المواد المختارة</div>
               </div>
-            </div>
+            </div>` : ''}
           </div>
           ${motivationPhrase ? `<div class="motivation">${motivationPhrase}</div>` : ''}
           ${tableContent}
@@ -611,12 +635,18 @@ const Index = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="purple">بنفسجي</SelectItem>
-                  <SelectItem value="black">أسود</SelectItem>
-                  <SelectItem value="pink">وردي</SelectItem>
                   <SelectItem value="blue">أزرق</SelectItem>
                   <SelectItem value="green">أخضر</SelectItem>
+                  <SelectItem value="purple">بنفسجي</SelectItem>
                   <SelectItem value="red">أحمر</SelectItem>
+                  <SelectItem value="pink">وردي</SelectItem>
+                  <SelectItem value="orange">برتقالي</SelectItem>
+                  <SelectItem value="teal">أزرق مخضر</SelectItem>
+                  <SelectItem value="indigo">نيلي</SelectItem>
+                  <SelectItem value="amber">عنبري</SelectItem>
+                  <SelectItem value="emerald">زمردي</SelectItem>
+                  <SelectItem value="cyan">سماوي</SelectItem>
+                  <SelectItem value="black">أسود</SelectItem>
                 </SelectContent>
               </Select>
             </CardContent>
