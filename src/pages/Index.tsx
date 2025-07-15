@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { GraduationCap, Calendar, Palette, Type, Sparkles, Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 interface Subject {
   id: string;
@@ -113,7 +113,7 @@ const subjects: Subject[] = [
 
 const Index = () => {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const [tableFormat, setTableFormat] = useState<string>('day-subject');
+  const [tableFormat, setTableFormat] = useState<string>('subject-day');
   const [textFormat, setTextFormat] = useState<string>('regular');
   const [tableColor, setTableColor] = useState<string>('blue');
   const [includeMotivation, setIncludeMotivation] = useState<boolean>(false);
@@ -161,7 +161,7 @@ const Index = () => {
     newWindow.document.close();
   };
 
-  const downloadAsImage = () => {
+  const downloadAsJPG = () => {
     const selectedSubjectData = subjects.filter(s => selectedSubjects.includes(s.id));
     
     if (selectedSubjectData.length === 0) {
@@ -169,34 +169,30 @@ const Index = () => {
       return;
     }
 
-    // Create a canvas element to render the table as image
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Set canvas size
-    canvas.width = 800;
-    canvas.height = 600;
-
-    // Create HTML content for the image
-    const tableHtml = createTableHTML(selectedSubjectData);
-    
-    // Convert HTML to image using html2canvas approach
+    // Create a temporary div to render the table for image conversion
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = tableHtml;
+    tempDiv.innerHTML = createTableHTML(selectedSubjectData);
     tempDiv.style.position = 'absolute';
     tempDiv.style.left = '-9999px';
+    tempDiv.style.background = 'white';
+    tempDiv.style.padding = '20px';
     document.body.appendChild(tempDiv);
 
-    // Simple download as HTML file for now (will work as screenshot)
-    const blob = new Blob([tableHtml], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'exam-schedule.html';
-    a.click();
-    URL.revokeObjectURL(url);
-    document.body.removeChild(tempDiv);
+    // Convert to canvas and download as JPG
+    html2canvas(tempDiv, {
+      backgroundColor: 'white',
+      scale: 2,
+      useCORS: true
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'exam-schedule.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+      document.body.removeChild(tempDiv);
+    }).catch(error => {
+      console.error('Error generating image:', error);
+      document.body.removeChild(tempDiv);
+    });
   };
 
   const createTableHTML = (selectedSubjectData: Subject[]) => {
@@ -231,7 +227,7 @@ const Index = () => {
 
     let tableContent = '';
 
-    if (tableFormat === 'day-subject') {
+    if (tableFormat === 'subject-day') {
       // Group by time slots
       const groupedByTime: { [key: string]: Subject[] } = {};
       selectedSubjectData.forEach(subject => {
@@ -245,16 +241,16 @@ const Index = () => {
         <table style="width: 100%; border-collapse: collapse; font-family: 'Cairo', Arial, sans-serif; font-weight: ${fontWeightMap[textFormat as keyof typeof fontWeightMap]};">
           <thead>
             <tr style="background-color: ${colorMap[tableColor as keyof typeof colorMap]}; color: white;">
-              <th style="border: 2px solid #333; padding: 12px; text-align: center;">الوقت</th>
               <th style="border: 2px solid #333; padding: 12px; text-align: center;">المادة</th>
+              <th style="border: 2px solid #333; padding: 12px; text-align: center;">الوقت</th>
             </tr>
           </thead>
           <tbody>
             ${Object.entries(groupedByTime).map(([time, timeSubjects], index) => 
               timeSubjects.map((subject, subIndex) => `
                 <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
-                  ${subIndex === 0 ? `<td style="border: 2px solid #333; padding: 12px; text-align: center; vertical-align: middle;" rowspan="${timeSubjects.length}">${time}</td>` : ''}
                   <td style="border: 2px solid #333; padding: 12px; text-align: center;">${subject.name}</td>
+                  ${subIndex === 0 ? `<td style="border: 2px solid #333; padding: 12px; text-align: center; vertical-align: middle;" rowspan="${timeSubjects.length}">${time}</td>` : ''}
                 </tr>
               `).join('')
             ).join('')}
@@ -275,15 +271,15 @@ const Index = () => {
         <table style="width: 100%; border-collapse: collapse; font-family: 'Cairo', Arial, sans-serif; font-weight: ${fontWeightMap[textFormat as keyof typeof fontWeightMap]};">
           <thead>
             <tr style="background-color: ${colorMap[tableColor as keyof typeof colorMap]}; color: white;">
-              <th style="border: 2px solid #333; padding: 12px; text-align: center;">الوقت</th>
               <th style="border: 2px solid #333; padding: 12px; text-align: center;">المواد</th>
+              <th style="border: 2px solid #333; padding: 12px; text-align: center;">الساعة</th>
             </tr>
           </thead>
           <tbody>
             ${Object.entries(groupedByTime).map(([time, timeSubjects], index) => `
               <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
-                <td style="border: 2px solid #333; padding: 12px; text-align: center;">${time}</td>
                 <td style="border: 2px solid #333; padding: 12px; text-align: center;">${timeSubjects.map(s => s.name).join(', ')}</td>
+                <td style="border: 2px solid #333; padding: 12px; text-align: center;">${time}</td>
               </tr>
             `).join('')}
           </tbody>
@@ -333,17 +329,6 @@ const Index = () => {
             font-size: 1.2em;
             font-weight: 600;
           }
-          .download-btn {
-            background: ${colorMap[tableColor as keyof typeof colorMap]};
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
-            font-size: 1.1em;
-          }
           .note {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
@@ -352,11 +337,6 @@ const Index = () => {
             margin: 20px 0;
             text-align: center;
             color: #856404;
-          }
-          @media print {
-            body { margin: 0; background: white; }
-            .container { box-shadow: none; margin: 0; }
-            .download-btn { display: none; }
           }
         </style>
       </head>
@@ -372,7 +352,6 @@ const Index = () => {
             <p><strong>ملاحظة:</strong> "م" يعني امتحان مؤتمت</p>
             <p><strong>مهم:</strong> يُرجى التأكد من مواعيد الامتحان بعد الإنشاء</p>
           </div>
-          <button class="download-btn" onclick="window.print()">طباعة الجدول</button>
         </div>
       </body>
       </html>
@@ -443,7 +422,7 @@ const Index = () => {
                                   }}
                                 />
                                 <Label htmlFor={subject.id} className="text-sm cursor-pointer flex-1">
-                                  {subject.name} - {subject.examTime}
+                                  {subject.name}
                                 </Label>
                               </div>
                             ))}
@@ -481,12 +460,12 @@ const Index = () => {
           <CardContent>
             <RadioGroup value={tableFormat} onValueChange={setTableFormat}>
               <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="day-subject" id="day-subject" />
-                <Label htmlFor="day-subject">وقت - مادة</Label>
+                <RadioGroupItem value="subject-day" id="subject-day" />
+                <Label htmlFor="subject-day">مادة - وقت</Label>
               </div>
               <div className="flex items-center space-x-2 space-x-reverse">
-                <RadioGroupItem value="day-hour" id="day-hour" />
-                <Label htmlFor="day-hour">وقت - مواد</Label>
+                <RadioGroupItem value="subject-hour" id="subject-hour" />
+                <Label htmlFor="subject-hour">مواد - ساعة</Label>
               </div>
             </RadioGroup>
           </CardContent>
@@ -575,14 +554,14 @@ const Index = () => {
           </Button>
           
           <Button 
-            onClick={downloadAsImage}
+            onClick={downloadAsJPG}
             size="lg"
             variant="outline"
             className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold rounded-lg shadow-lg"
             disabled={selectedSubjects.length === 0}
           >
             <Download className="h-5 w-5 ml-2" />
-            تنزيل الجدول كـ HTML
+            تنزيل الجدول كصورة JPG
           </Button>
           
           {selectedSubjects.length === 0 && (
