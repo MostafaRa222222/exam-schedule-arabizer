@@ -7,108 +7,108 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { GraduationCap, Calendar, Palette, Type, Sparkles } from 'lucide-react';
+import { GraduationCap, Calendar, Palette, Type, Sparkles, Download } from 'lucide-react';
 
 interface Subject {
   id: string;
   name: string;
   year: number;
   semester: number;
-  examDay: string;
   examTime: string;
 }
 
 const subjects: Subject[] = [
-  // السنة الأولى - الفصل الأول (6 مواد)
-  { id: '1-1-1', name: 'مادة 1', year: 1, semester: 1, examDay: 'الأحد', examTime: '9:00-11:30' },
-  { id: '1-1-2', name: 'مادة 2', year: 1, semester: 1, examDay: 'الاثنين', examTime: '9:00-11:30' },
-  { id: '1-1-3', name: 'مادة 3', year: 1, semester: 1, examDay: 'الثلاثاء', examTime: '9:00-11:30' },
-  { id: '1-1-4', name: 'مادة 4', year: 1, semester: 1, examDay: 'الأربعاء', examTime: '9:00-11:30' },
-  { id: '1-1-5', name: 'مادة 5', year: 1, semester: 1, examDay: 'الخميس', examTime: '9:00-11:30' },
-  { id: '1-1-6', name: 'مادة 6', year: 1, semester: 1, examDay: 'السبت', examTime: '9:00-11:30' },
+  // السنة الأولى - الفصل الأول (7 مواد)
+  { id: '1-1-1', name: 'تحليل 1 م', year: 1, semester: 1, examTime: '11:30-1:00' },
+  { id: '1-1-2', name: 'فيزياء 1 م', year: 1, semester: 1, examTime: '11:30-1:00' },
+  { id: '1-1-3', name: 'لغة أجنبية 1 م', year: 1, semester: 1, examTime: '11:30-1:00' },
+  { id: '1-1-4', name: 'رياضيات متقطعة م', year: 1, semester: 1, examTime: '9:00-10:30' },
+  { id: '1-1-5', name: 'مبادئ عمل الحاسوب م', year: 1, semester: 1, examTime: '9:00-10:30' },
+  { id: '1-1-6', name: 'ثقافة م', year: 1, semester: 1, examTime: '10:00-11:30' },
+  { id: '1-1-7', name: 'برمجة 1 م', year: 1, semester: 1, examTime: '11:30-1:00' },
   
   // السنة الأولى - الفصل الثاني (7 مواد)
-  { id: '1-2-1', name: 'مادة 7', year: 1, semester: 2, examDay: 'الأحد', examTime: '1:00-3:30' },
-  { id: '1-2-2', name: 'مادة 8', year: 1, semester: 2, examDay: 'الاثنين', examTime: '1:00-3:30' },
-  { id: '1-2-3', name: 'مادة 9', year: 1, semester: 2, examDay: 'الثلاثاء', examTime: '1:00-3:30' },
-  { id: '1-2-4', name: 'مادة 10', year: 1, semester: 2, examDay: 'الأربعاء', examTime: '1:00-3:30' },
-  { id: '1-2-5', name: 'مادة 11', year: 1, semester: 2, examDay: 'الخميس', examTime: '1:00-3:30' },
-  { id: '1-2-6', name: 'مادة 12', year: 1, semester: 2, examDay: 'السبت', examTime: '1:00-3:30' },
-  { id: '1-2-7', name: 'مادة 13', year: 1, semester: 2, examDay: 'الأحد', examTime: '10:30-1:00' },
+  { id: '1-2-1', name: 'تحليل 2 م', year: 1, semester: 2, examTime: '9:00-10:30' },
+  { id: '1-2-2', name: 'فيزياء 2 م', year: 1, semester: 2, examTime: '11:30-1:00' },
+  { id: '1-2-3', name: 'لغة أجنبية 2 م', year: 1, semester: 2, examTime: '11:30-1:00' },
+  { id: '1-2-4', name: 'جبر خطي م', year: 1, semester: 2, examTime: '9:00-10:30' },
+  { id: '1-2-5', name: 'دارات كهربائية م', year: 1, semester: 2, examTime: '11:30-1:00' },
+  { id: '1-2-6', name: 'لغة عربية م', year: 1, semester: 2, examTime: '11:30-1:00' },
+  { id: '1-2-7', name: 'برمجة 2 م', year: 1, semester: 2, examTime: '11:30-1:00' },
 
   // السنة الثانية - الفصل الأول (7 مواد)
-  { id: '2-1-1', name: 'مادة 14', year: 2, semester: 1, examDay: 'الاثنين', examTime: '10:30-1:00' },
-  { id: '2-1-2', name: 'مادة 15', year: 2, semester: 1, examDay: 'الثلاثاء', examTime: '10:30-1:00' },
-  { id: '2-1-3', name: 'مادة 16', year: 2, semester: 1, examDay: 'الأربعاء', examTime: '10:30-1:00' },
-  { id: '2-1-4', name: 'مادة 17', year: 2, semester: 1, examDay: 'الخميس', examTime: '10:30-1:00' },
-  { id: '2-1-5', name: 'مادة 18', year: 2, semester: 1, examDay: 'السبت', examTime: '10:30-1:00' },
-  { id: '2-1-6', name: 'مادة 19', year: 2, semester: 1, examDay: 'الأحد', examTime: '3:30-6:00' },
-  { id: '2-1-7', name: 'مادة 20', year: 2, semester: 1, examDay: 'الاثنين', examTime: '3:30-6:00' },
+  { id: '2-1-1', name: 'تحليل 3 م', year: 2, semester: 1, examTime: '9:00-10:30' },
+  { id: '2-1-2', name: 'لغة أجنبية 3 م', year: 2, semester: 1, examTime: '9:00-10:30' },
+  { id: '2-1-3', name: 'دارات إلكترونية', year: 2, semester: 1, examTime: '9:00-11:00' },
+  { id: '2-1-4', name: 'برمجة رياضية م', year: 2, semester: 1, examTime: '11:30-1:00' },
+  { id: '2-1-5', name: 'تحليل عددي 1 م', year: 2, semester: 1, examTime: '2:00-3:30' },
+  { id: '2-1-6', name: 'برمجة 3 م', year: 2, semester: 1, examTime: '11:30-1:00' },
+  { id: '2-1-7', name: 'احتمالات م', year: 2, semester: 1, examTime: '11:30-1:00' },
 
   // السنة الثانية - الفصل الثاني (7 مواد)
-  { id: '2-2-1', name: 'مادة 21', year: 2, semester: 2, examDay: 'الثلاثاء', examTime: '3:30-6:00' },
-  { id: '2-2-2', name: 'مادة 22', year: 2, semester: 2, examDay: 'الأربعاء', examTime: '3:30-6:00' },
-  { id: '2-2-3', name: 'مادة 23', year: 2, semester: 2, examDay: 'الخميس', examTime: '3:30-6:00' },
-  { id: '2-2-4', name: 'مادة 24', year: 2, semester: 2, examDay: 'السبت', examTime: '3:30-6:00' },
-  { id: '2-2-5', name: 'مادة 25', year: 2, semester: 2, examDay: 'الأحد', examTime: '11:00-1:30' },
-  { id: '2-2-6', name: 'مادة 26', year: 2, semester: 2, examDay: 'الاثنين', examTime: '11:00-1:30' },
-  { id: '2-2-7', name: 'مادة 27', year: 2, semester: 2, examDay: 'الثلاثاء', examTime: '11:00-1:30' },
+  { id: '2-2-1', name: 'تحليل عددي 2 م', year: 2, semester: 2, examTime: '12:30-2:00' },
+  { id: '2-2-2', name: 'خوارزميات 1 م', year: 2, semester: 2, examTime: '9:00-10:30' },
+  { id: '2-2-3', name: 'إحصاء م', year: 2, semester: 2, examTime: '9:00-10:30' },
+  { id: '2-2-4', name: 'لغة أجنبية 4 م', year: 2, semester: 2, examTime: '9:00-10:30' },
+  { id: '2-2-5', name: 'مهارات التواصل م', year: 2, semester: 2, examTime: '9:00-10:30' },
+  { id: '2-2-6', name: 'تحليل 4 م', year: 2, semester: 2, examTime: '9:00-10:30' },
+  { id: '2-2-7', name: 'نظم ودارات منطقية م', year: 2, semester: 2, examTime: '9:00-10:30' },
 
   // السنة الثالثة - الفصل الأول (7 مواد)
-  { id: '3-1-1', name: 'مادة 28', year: 3, semester: 1, examDay: 'الأربعاء', examTime: '11:00-1:30' },
-  { id: '3-1-2', name: 'مادة 29', year: 3, semester: 1, examDay: 'الخميس', examTime: '11:00-1:30' },
-  { id: '3-1-3', name: 'مادة 30', year: 3, semester: 1, examDay: 'السبت', examTime: '11:00-1:30' },
-  { id: '3-1-4', name: 'مادة 31', year: 3, semester: 1, examDay: 'الأحد', examTime: '9:00-11:30' },
-  { id: '3-1-5', name: 'مادة 32', year: 3, semester: 1, examDay: 'الاثنين', examTime: '9:00-11:30' },
-  { id: '3-1-6', name: 'مادة 33', year: 3, semester: 1, examDay: 'الثلاثاء', examTime: '9:00-11:30' },
-  { id: '3-1-7', name: 'مادة 34', year: 3, semester: 1, examDay: 'الأربعاء', examTime: '9:00-11:30' },
+  { id: '3-1-1', name: 'رسوميات حاسوبية م', year: 3, semester: 1, examTime: '11:30-1:00' },
+  { id: '3-1-2', name: 'نظرية المخططات م', year: 3, semester: 1, examTime: '11:30-1:00' },
+  { id: '3-1-3', name: 'معالجة الإشارة', year: 3, semester: 1, examTime: '9:00-11:00' },
+  { id: '3-1-4', name: 'خوارزميات 2 م', year: 3, semester: 1, examTime: '11:30-1:00' },
+  { id: '3-1-5', name: 'معالج مصغر م', year: 3, semester: 1, examTime: '11:30-1:00' },
+  { id: '3-1-6', name: 'نظرية المعلومات', year: 3, semester: 1, examTime: '9:00-11:00' },
+  { id: '3-1-7', name: 'قواعد معطيات 1 م', year: 3, semester: 1, examTime: '11:30-1:00' },
 
   // السنة الثالثة - الفصل الثاني (7 مواد)
-  { id: '3-2-1', name: 'مادة 35', year: 3, semester: 2, examDay: 'الخميس', examTime: '9:00-11:30' },
-  { id: '3-2-2', name: 'مادة 36', year: 3, semester: 2, examDay: 'السبت', examTime: '9:00-11:30' },
-  { id: '3-2-3', name: 'مادة 37', year: 3, semester: 2, examDay: 'الأحد', examTime: '1:00-3:30' },
-  { id: '3-2-4', name: 'مادة 38', year: 3, semester: 2, examDay: 'الاثنين', examTime: '1:00-3:30' },
-  { id: '3-2-5', name: 'مادة 39', year: 3, semester: 2, examDay: 'الثلاثاء', examTime: '1:00-3:30' },
-  { id: '3-2-6', name: 'مادة 40', year: 3, semester: 2, examDay: 'الأربعاء', examTime: '1:00-3:30' },
-  { id: '3-2-7', name: 'مادة 41', year: 3, semester: 2, examDay: 'الخميس', examTime: '1:00-3:30' },
+  { id: '3-2-1', name: 'مبادئ الذكاء الصنعي م', year: 3, semester: 2, examTime: '9:00-10:30' },
+  { id: '3-2-2', name: 'اتصالات تشابهية ورقمية', year: 3, semester: 2, examTime: '9:00-11:00' },
+  { id: '3-2-3', name: 'شبكات حاسوبية م', year: 3, semester: 2, examTime: '2:00-3:30' },
+  { id: '3-2-4', name: 'خوارزميات 3 م', year: 3, semester: 2, examTime: '11:30-1:00' },
+  { id: '3-2-5', name: 'بنية وتنظيم الحاسب 1 م', year: 3, semester: 2, examTime: '9:00-10:30' },
+  { id: '3-2-6', name: 'لغات صورية م', year: 3, semester: 2, examTime: '9:00-10:30' },
+  { id: '3-2-7', name: 'هندسة البرمجيات 1 م', year: 3, semester: 2, examTime: '9:00-10:30' },
 
   // السنة الرابعة - الفصل الأول (9 مواد)
-  { id: '4-1-1', name: 'مادة 42', year: 4, semester: 1, examDay: 'السبت', examTime: '1:00-3:30' },
-  { id: '4-1-2', name: 'مادة 43', year: 4, semester: 1, examDay: 'الأحد', examTime: '10:30-1:00' },
-  { id: '4-1-3', name: 'مادة 44', year: 4, semester: 1, examDay: 'الاثنين', examTime: '10:30-1:00' },
-  { id: '4-1-4', name: 'مادة 45', year: 4, semester: 1, examDay: 'الثلاثاء', examTime: '10:30-1:00' },
-  { id: '4-1-5', name: 'مادة 46', year: 4, semester: 1, examDay: 'الأربعاء', examTime: '10:30-1:00' },
-  { id: '4-1-6', name: 'مادة 47', year: 4, semester: 1, examDay: 'الخميس', examTime: '10:30-1:00' },
-  { id: '4-1-7', name: 'مادة 48', year: 4, semester: 1, examDay: 'السبت', examTime: '10:30-1:00' },
-  { id: '4-1-8', name: 'مادة 49', year: 4, semester: 1, examDay: 'الأحد', examTime: '3:30-6:00' },
-  { id: '4-1-9', name: 'مادة 50', year: 4, semester: 1, examDay: 'الاثنين', examTime: '3:30-6:00' },
+  { id: '4-1-1', name: 'نظرية الأرتال م', year: 4, semester: 1, examTime: '11:30-1:00' },
+  { id: '4-1-2', name: 'تصميم مترجمات م', year: 4, semester: 1, examTime: '11:30-1:00' },
+  { id: '4-1-3', name: 'بنية وتنظيم الحاسب 2 م', year: 4, semester: 1, examTime: '2:00-3:30' },
+  { id: '4-1-4', name: 'نظم وسائط متعددة م', year: 4, semester: 1, examTime: '11:30-1:00' },
+  { id: '4-1-5', name: 'نظم تشغيل 1', year: 4, semester: 1, examTime: '11:30-1:30' },
+  { id: '4-1-6', name: 'قواعد معطيات 2 م', year: 4, semester: 1, examTime: '9:00-10:30' },
+  { id: '4-1-7', name: 'شبكات حاسوبية متقدمة', year: 4, semester: 1, examTime: '9:00-11:00' },
+  { id: '4-1-8', name: 'برمجة منطقية', year: 4, semester: 1, examTime: '9:00-11:00' },
+  { id: '4-1-9', name: 'بحوث عمليات م', year: 4, semester: 1, examTime: '9:00-10:30' },
 
   // السنة الرابعة - الفصل الثاني (8 مواد)
-  { id: '4-2-1', name: 'مادة 51', year: 4, semester: 2, examDay: 'الثلاثاء', examTime: '3:30-6:00' },
-  { id: '4-2-2', name: 'مادة 52', year: 4, semester: 2, examDay: 'الأربعاء', examTime: '3:30-6:00' },
-  { id: '4-2-3', name: 'مادة 53', year: 4, semester: 2, examDay: 'الخميس', examTime: '3:30-6:00' },
-  { id: '4-2-4', name: 'مادة 54', year: 4, semester: 2, examDay: 'السبت', examTime: '3:30-6:00' },
-  { id: '4-2-5', name: 'مادة 55', year: 4, semester: 2, examDay: 'الأحد', examTime: '11:00-1:30' },
-  { id: '4-2-6', name: 'مادة 56', year: 4, semester: 2, examDay: 'الاثنين', examTime: '11:00-1:30' },
-  { id: '4-2-7', name: 'مادة 57', year: 4, semester: 2, examDay: 'الثلاثاء', examTime: '11:00-1:30' },
-  { id: '4-2-8', name: 'مادة 58', year: 4, semester: 2, examDay: 'الأربعاء', examTime: '11:00-1:30' },
+  { id: '4-2-1', name: 'تسويق وإدارة المشاريع م', year: 4, semester: 2, examTime: '11:30-1:00' },
+  { id: '4-2-2', name: 'نظم تشغيل 2', year: 4, semester: 2, examTime: '11:30-1:30' },
+  { id: '4-2-3', name: 'أمن المعلومات م', year: 4, semester: 2, examTime: '11:30-1:00' },
+  { id: '4-2-4', name: 'نظم رقمية مبرمجة م', year: 4, semester: 2, examTime: '9:00-10:30' },
+  { id: '4-2-5', name: 'شبكات عصبونية ومنطق الترجيح', year: 4, semester: 2, examTime: '9:00-11:00' },
+  { id: '4-2-6', name: 'هندسة البرمجيات 2 م', year: 4, semester: 2, examTime: '9:00-10:30' },
+  { id: '4-2-7', name: 'برمجة تفرعية م', year: 4, semester: 2, examTime: '11:30-1:00' },
+  { id: '4-2-8', name: 'روبوتية', year: 4, semester: 2, examTime: '9:00-11:00' },
 
   // السنة الخامسة - الفصل الأول (8 مواد)
-  { id: '5-1-1', name: 'مادة 59', year: 5, semester: 1, examDay: 'الخميس', examTime: '11:00-1:30' },
-  { id: '5-1-2', name: 'مادة 60', year: 5, semester: 1, examDay: 'السبت', examTime: '11:00-1:30' },
-  { id: '5-1-3', name: 'مادة 61', year: 5, semester: 1, examDay: 'الأحد', examTime: '9:00-11:30' },
-  { id: '5-1-4', name: 'مادة 62', year: 5, semester: 1, examDay: 'الاثنين', examTime: '9:00-11:30' },
-  { id: '5-1-5', name: 'مادة 63', year: 5, semester: 1, examDay: 'الثلاثاء', examTime: '9:00-11:30' },
-  { id: '5-1-6', name: 'مادة 64', year: 5, semester: 1, examDay: 'الأربعاء', examTime: '9:00-11:30' },
-  { id: '5-1-7', name: 'مادة 65', year: 5, semester: 1, examDay: 'الخميس', examTime: '9:00-11:30' },
-  { id: '5-1-8', name: 'مادة 66', year: 5, semester: 1, examDay: 'السبت', examTime: '9:00-11:30' },
+  { id: '5-1-1', name: 'أمن الشبكات', year: 5, semester: 1, examTime: '11:30-1:30' },
+  { id: '5-1-2', name: 'تحكم منطقي مبرمج PLC', year: 5, semester: 1, examTime: '9:00-11:00' },
+  { id: '5-1-3', name: 'رؤية حاسوبية', year: 5, semester: 1, examTime: '11:30-1:30' },
+  { id: '5-1-4', name: 'جودة ووثوقية م', year: 5, semester: 1, examTime: '11:30-1:00' },
+  { id: '5-1-5', name: 'هندسة البرمجيات 3 م', year: 5, semester: 1, examTime: '11:30-1:00' },
+  { id: '5-1-6', name: 'نظم خبيرة', year: 5, semester: 1, examTime: '9:00-11:00' },
+  { id: '5-1-7', name: 'نظم موزعة', year: 5, semester: 1, examTime: '9:00-11:00' },
+  { id: '5-1-8', name: 'نمذجة ومحاكاة م', year: 5, semester: 1, examTime: '11:30-1:00' },
 
   // السنة الخامسة - الفصل الثاني (5 مواد)
-  { id: '5-2-1', name: 'مادة 67', year: 5, semester: 2, examDay: 'الأحد', examTime: '1:00-3:30' },
-  { id: '5-2-2', name: 'مادة 68', year: 5, semester: 2, examDay: 'الاثنين', examTime: '1:00-3:30' },
-  { id: '5-2-3', name: 'مادة 69', year: 5, semester: 2, examDay: 'الثلاثاء', examTime: '1:00-3:30' },
-  { id: '5-2-4', name: 'مادة 70', year: 5, semester: 2, examDay: 'الأربعاء', examTime: '1:00-3:30' },
-  { id: '5-2-5', name: 'مادة 71', year: 5, semester: 2, examDay: 'الخميس', examTime: '1:00-3:30' },
+  { id: '5-2-1', name: 'معالجة لغات طبيعية', year: 5, semester: 2, examTime: '11:30-1:30' },
+  { id: '5-2-2', name: 'إدارة نظم إنتاجية م', year: 5, semester: 2, examTime: '9:00-10:30' },
+  { id: '5-2-3', name: 'إدارة الشبكات/ شبكات لاسلكية', year: 5, semester: 2, examTime: '11:30-1:30' },
+  { id: '5-2-4', name: 'تنقيب المعطيات م', year: 5, semester: 2, examTime: '11:30-1:00' },
+  { id: '5-2-5', name: 'نظم الزمن الحقيقي م', year: 5, semester: 2, examTime: '11:30-1:00' },
 ];
 
 const Index = () => {
@@ -161,6 +161,44 @@ const Index = () => {
     newWindow.document.close();
   };
 
+  const downloadAsImage = () => {
+    const selectedSubjectData = subjects.filter(s => selectedSubjects.includes(s.id));
+    
+    if (selectedSubjectData.length === 0) {
+      alert('يرجى اختيار مادة واحدة على الأقل');
+      return;
+    }
+
+    // Create a canvas element to render the table as image
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set canvas size
+    canvas.width = 800;
+    canvas.height = 600;
+
+    // Create HTML content for the image
+    const tableHtml = createTableHTML(selectedSubjectData);
+    
+    // Convert HTML to image using html2canvas approach
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tableHtml;
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px';
+    document.body.appendChild(tempDiv);
+
+    // Simple download as HTML file for now (will work as screenshot)
+    const blob = new Blob([tableHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'exam-schedule.html';
+    a.click();
+    URL.revokeObjectURL(url);
+    document.body.removeChild(tempDiv);
+  };
+
   const createTableHTML = (selectedSubjectData: Subject[]) => {
     const colorMap = {
       purple: '#8B5CF6',
@@ -194,31 +232,29 @@ const Index = () => {
     let tableContent = '';
 
     if (tableFormat === 'day-subject') {
-      // Group by day
-      const groupedByDay: { [key: string]: Subject[] } = {};
+      // Group by time slots
+      const groupedByTime: { [key: string]: Subject[] } = {};
       selectedSubjectData.forEach(subject => {
-        if (!groupedByDay[subject.examDay]) {
-          groupedByDay[subject.examDay] = [];
+        if (!groupedByTime[subject.examTime]) {
+          groupedByTime[subject.examTime] = [];
         }
-        groupedByDay[subject.examDay].push(subject);
+        groupedByTime[subject.examTime].push(subject);
       });
 
       tableContent = `
         <table style="width: 100%; border-collapse: collapse; font-family: 'Cairo', Arial, sans-serif; font-weight: ${fontWeightMap[textFormat as keyof typeof fontWeightMap]};">
           <thead>
             <tr style="background-color: ${colorMap[tableColor as keyof typeof colorMap]}; color: white;">
-              <th style="border: 2px solid #333; padding: 12px; text-align: center;">اليوم</th>
-              <th style="border: 2px solid #333; padding: 12px; text-align: center;">المادة</th>
               <th style="border: 2px solid #333; padding: 12px; text-align: center;">الوقت</th>
+              <th style="border: 2px solid #333; padding: 12px; text-align: center;">المادة</th>
             </tr>
           </thead>
           <tbody>
-            ${Object.entries(groupedByDay).map(([day, daySubjects]) => 
-              daySubjects.map((subject, index) => `
+            ${Object.entries(groupedByTime).map(([time, timeSubjects], index) => 
+              timeSubjects.map((subject, subIndex) => `
                 <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
-                  ${index === 0 ? `<td style="border: 2px solid #333; padding: 12px; text-align: center; vertical-align: middle;" rowspan="${daySubjects.length}">${day}</td>` : ''}
+                  ${subIndex === 0 ? `<td style="border: 2px solid #333; padding: 12px; text-align: center; vertical-align: middle;" rowspan="${timeSubjects.length}">${time}</td>` : ''}
                   <td style="border: 2px solid #333; padding: 12px; text-align: center;">${subject.name}</td>
-                  <td style="border: 2px solid #333; padding: 12px; text-align: center;">${subject.examTime}</td>
                 </tr>
               `).join('')
             ).join('')}
@@ -226,37 +262,30 @@ const Index = () => {
         </table>
       `;
     } else {
-      // Group by day and time
-      const groupedByDayTime: { [key: string]: { [key: string]: Subject[] } } = {};
+      // Group by time
+      const groupedByTime: { [key: string]: Subject[] } = {};
       selectedSubjectData.forEach(subject => {
-        if (!groupedByDayTime[subject.examDay]) {
-          groupedByDayTime[subject.examDay] = {};
+        if (!groupedByTime[subject.examTime]) {
+          groupedByTime[subject.examTime] = [];
         }
-        if (!groupedByDayTime[subject.examDay][subject.examTime]) {
-          groupedByDayTime[subject.examDay][subject.examTime] = [];
-        }
-        groupedByDayTime[subject.examDay][subject.examTime].push(subject);
+        groupedByTime[subject.examTime].push(subject);
       });
 
       tableContent = `
         <table style="width: 100%; border-collapse: collapse; font-family: 'Cairo', Arial, sans-serif; font-weight: ${fontWeightMap[textFormat as keyof typeof fontWeightMap]};">
           <thead>
             <tr style="background-color: ${colorMap[tableColor as keyof typeof colorMap]}; color: white;">
-              <th style="border: 2px solid #333; padding: 12px; text-align: center;">اليوم</th>
               <th style="border: 2px solid #333; padding: 12px; text-align: center;">الوقت</th>
               <th style="border: 2px solid #333; padding: 12px; text-align: center;">المواد</th>
             </tr>
           </thead>
           <tbody>
-            ${Object.entries(groupedByDayTime).map(([day, timeGroups]) => 
-              Object.entries(timeGroups).map(([time, timeSubjects], timeIndex) => `
-                <tr style="background-color: ${timeIndex % 2 === 0 ? '#f8f9fa' : 'white'};">
-                  ${timeIndex === 0 ? `<td style="border: 2px solid #333; padding: 12px; text-align: center; vertical-align: middle;" rowspan="${Object.keys(timeGroups).length}">${day}</td>` : ''}
-                  <td style="border: 2px solid #333; padding: 12px; text-align: center;">${time}</td>
-                  <td style="border: 2px solid #333; padding: 12px; text-align: center;">${timeSubjects.map(s => s.name).join(', ')}</td>
-                </tr>
-              `).join('')
-            ).join('')}
+            ${Object.entries(groupedByTime).map(([time, timeSubjects], index) => `
+              <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
+                <td style="border: 2px solid #333; padding: 12px; text-align: center;">${time}</td>
+                <td style="border: 2px solid #333; padding: 12px; text-align: center;">${timeSubjects.map(s => s.name).join(', ')}</td>
+              </tr>
+            `).join('')}
           </tbody>
         </table>
       `;
@@ -304,9 +333,30 @@ const Index = () => {
             font-size: 1.2em;
             font-weight: 600;
           }
+          .download-btn {
+            background: ${colorMap[tableColor as keyof typeof colorMap]};
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            font-size: 1.1em;
+          }
+          .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            color: #856404;
+          }
           @media print {
             body { margin: 0; background: white; }
             .container { box-shadow: none; margin: 0; }
+            .download-btn { display: none; }
           }
         </style>
       </head>
@@ -318,6 +368,11 @@ const Index = () => {
           </div>
           ${motivationPhrase ? `<div class="motivation">${motivationPhrase}</div>` : ''}
           ${tableContent}
+          <div class="note">
+            <p><strong>ملاحظة:</strong> "م" يعني امتحان مؤتمت</p>
+            <p><strong>مهم:</strong> يُرجى التأكد من مواعيد الامتحان بعد الإنشاء</p>
+          </div>
+          <button class="download-btn" onclick="window.print()">طباعة الجدول</button>
         </div>
       </body>
       </html>
@@ -373,16 +428,22 @@ const Index = () => {
                             </Button>
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 gap-2">
                             {semesterSubjects.map(subject => (
                               <div key={subject.id} className="flex items-center space-x-2 space-x-reverse">
                                 <Checkbox
                                   id={subject.id}
                                   checked={selectedSubjects.includes(subject.id)}
-                                  onCheckedChange={() => handleSubjectToggle(subject.id)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked === true) {
+                                      handleSubjectToggle(subject.id);
+                                    } else if (checked === false) {
+                                      handleSubjectToggle(subject.id);
+                                    }
+                                  }}
                                 />
-                                <Label htmlFor={subject.id} className="text-sm cursor-pointer">
-                                  {subject.name}
+                                <Label htmlFor={subject.id} className="text-sm cursor-pointer flex-1">
+                                  {subject.name} - {subject.examTime}
                                 </Label>
                               </div>
                             ))}
@@ -421,11 +482,11 @@ const Index = () => {
             <RadioGroup value={tableFormat} onValueChange={setTableFormat}>
               <div className="flex items-center space-x-2 space-x-reverse">
                 <RadioGroupItem value="day-subject" id="day-subject" />
-                <Label htmlFor="day-subject">يوم - مادة</Label>
+                <Label htmlFor="day-subject">وقت - مادة</Label>
               </div>
               <div className="flex items-center space-x-2 space-x-reverse">
                 <RadioGroupItem value="day-hour" id="day-hour" />
-                <Label htmlFor="day-hour">يوم - ساعة</Label>
+                <Label htmlFor="day-hour">وقت - مواد</Label>
               </div>
             </RadioGroup>
           </CardContent>
@@ -494,15 +555,15 @@ const Index = () => {
               <Checkbox
                 id="motivation"
                 checked={includeMotivation}
-                onCheckedChange={setIncludeMotivation}
+                onCheckedChange={(checked) => setIncludeMotivation(checked === true)}
               />
               <Label htmlFor="motivation">إضافة عبارة تحفيزية للجدول</Label>
             </div>
           </CardContent>
         </Card>
 
-        {/* Generate Button */}
-        <div className="text-center">
+        {/* Generate Buttons */}
+        <div className="text-center space-y-4">
           <Button 
             onClick={generateTable}
             size="lg"
@@ -511,6 +572,17 @@ const Index = () => {
           >
             <Calendar className="h-5 w-5 ml-2" />
             إنشاء جدول الامتحانات
+          </Button>
+          
+          <Button 
+            onClick={downloadAsImage}
+            size="lg"
+            variant="outline"
+            className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold rounded-lg shadow-lg"
+            disabled={selectedSubjects.length === 0}
+          >
+            <Download className="h-5 w-5 ml-2" />
+            تنزيل الجدول كـ HTML
           </Button>
           
           {selectedSubjects.length === 0 && (
