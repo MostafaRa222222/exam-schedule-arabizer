@@ -19,7 +19,7 @@ interface Subject {
   examDate: string;
 }
 
-const SUBTITLE = "برنامج الامتحان النظري - الفصل الثاني للعام الدراسي 2024/2025"
+const SUBTITLE = "برنامج الامتحان النظري - الفصل الثاني للعام الدراسي 2024-2025"
 
 const loadSubjectsFromCSV = async (): Promise<Subject[]> => {
   try {
@@ -454,7 +454,7 @@ const Index = () => {
             <GraduationCap className="h-12 w-12 text-blue-600" />
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">مولد جداول الامتحانات</h1>
           </div>
-          <p className="text-sm sm:text-base text-blue-700 font-medium mb-2">${SUBTITLE}</p>
+          <p className="text-sm sm:text-base text-blue-700 font-medium mb-2">{SUBTITLE}</p>
           <p className="text-lg sm:text-xl text-gray-600 px-4">أهلاً وسهلاً! اختر موادك واحصل على جدول امتحاناتك المخصص</p>
         </div>
 
