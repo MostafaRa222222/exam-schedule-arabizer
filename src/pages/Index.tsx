@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -19,105 +19,47 @@ interface Subject {
   examDate: string;
 }
 
-const subjects: Subject[] = [
-  // السنة الأولى - الفصل الأول (7 مواد)
-  { id: '1-1-1', name: 'تحليل 1 م', year: 1, semester: 1, examTime: '11:30-1:00', examDate: '13/8/2025' },
-  { id: '1-1-2', name: 'فيزياء 1 م', year: 1, semester: 1, examTime: '11:30-1:00', examDate: '19/8/2025' },
-  { id: '1-1-3', name: 'لغة أجنبية 1 م', year: 1, semester: 1, examTime: '11:30-1:00', examDate: '29/7/2025' },
-  { id: '1-1-4', name: 'رياضيات متقطعة م', year: 1, semester: 1, examTime: '9:00-10:30', examDate: '4/8/2025' },
-  { id: '1-1-5', name: 'مبادئ عمل الحاسوب م', year: 1, semester: 1, examTime: '9:00-10:30', examDate: '28/8/2025' },
-  { id: '1-1-6', name: 'ثقافة م', year: 1, semester: 1, examTime: '10:00-11:30', examDate: '31/8/2025' },
-  { id: '1-1-7', name: 'برمجة 1 م', year: 1, semester: 1, examTime: '11:30-1:00', examDate: '6/8/2025' },
-  
-  // السنة الأولى - الفصل الثاني (7 مواد)
-  { id: '1-2-1', name: 'تحليل 2 م', year: 1, semester: 2, examTime: '9:00-10:30', examDate: '27/7/2025' },
-  { id: '1-2-2', name: 'فيزياء 2 م', year: 1, semester: 2, examTime: '11:30-1:00', examDate: '31/7/2025' },
-  { id: '1-2-3', name: 'لغة أجنبية 2 م', year: 1, semester: 2, examTime: '11:30-1:00', examDate: '5/8/2025' },
-  { id: '1-2-4', name: 'جبر خطي م', year: 1, semester: 2, examTime: '9:00-10:30', examDate: '11/8/2025' },
-  { id: '1-2-5', name: 'دارات كهربائية م', year: 1, semester: 2, examTime: '11:30-1:00', examDate: '17/8/2025' },
-  { id: '1-2-6', name: 'لغة عربية م', year: 1, semester: 2, examTime: '11:30-1:00', examDate: '21/8/2025' },
-  { id: '1-2-7', name: 'برمجة 2 م', year: 1, semester: 2, examTime: '11:30-1:00', examDate: '2/9/2025' },
+const loadSubjectsFromCSV = async (): Promise<Subject[]> => {
+  try {
+    const response = await fetch('/subjects.csv');
+    const csvText = await response.text();
+    const lines = csvText.trim().split('\n');
+    
+    return lines.slice(1).map((line, index) => {
+      const values = line.split(',');
+      const subject: Subject = {
+        id: `${values[1]}-${values[2]}-${index + 1}`,
+        name: values[0],
+        year: parseInt(values[1]),
+        semester: parseInt(values[2]),
+        examTime: values[3],
+        examDate: values[4]
+      };
+      return subject;
+    });
+  } catch (error) {
+    console.error('Error loading subjects from CSV:', error);
+    return [];
+  }
+};
 
-  // السنة الثانية - الفصل الأول (7 مواد)
-  { id: '2-1-1', name: 'تحليل 3 م', year: 2, semester: 1, examTime: '9:00-10:30', examDate: '6/8/2025' },
-  { id: '2-1-2', name: 'لغة أجنبية 3 م', year: 2, semester: 1, examTime: '9:00-10:30', examDate: '1/9/2025' },
-  { id: '2-1-3', name: 'دارات إلكترونية', year: 2, semester: 1, examTime: '9:00-11:00', examDate: '10/8/2025' },
-  { id: '2-1-4', name: 'برمجة رياضية م', year: 2, semester: 1, examTime: '11:30-1:00', examDate: '30/7/2025' },
-  { id: '2-1-5', name: 'تحليل عددي 1 م', year: 2, semester: 1, examTime: '2:00-3:30', examDate: '7/8/2025' },
-  { id: '2-1-6', name: 'برمجة 3 م', year: 2, semester: 1, examTime: '11:30-1:00', examDate: '14/8/2025' },
-  { id: '2-1-7', name: 'احتمالات م', year: 2, semester: 1, examTime: '11:30-1:00', examDate: '20/8/2025' },
-
-  // السنة الثانية - الفصل الثاني (7 مواد)
-  { id: '2-2-1', name: 'تحليل عددي 2 م', year: 2, semester: 2, examTime: '12:30-2:00', examDate: '31/8/2025' },
-  { id: '2-2-2', name: 'خوارزميات 1 م', year: 2, semester: 2, examTime: '9:00-10:30', examDate: '28/7/2025' },
-  { id: '2-2-3', name: 'إحصاء م', year: 2, semester: 2, examTime: '9:00-10:30', examDate: '12/8/2025' },
-  { id: '2-2-4', name: 'لغة أجنبية 4 م', year: 2, semester: 2, examTime: '9:00-10:30', examDate: '3/8/2025' },
-  { id: '2-2-5', name: 'مهارات التواصل م', year: 2, semester: 2, examTime: '9:00-10:30', examDate: '3/9/2025' },
-  { id: '2-2-6', name: 'تحليل 4 م', year: 2, semester: 2, examTime: '9:00-10:30', examDate: '24/8/2025' },
-  { id: '2-2-7', name: 'نظم ودارات منطقية م', year: 2, semester: 2, examTime: '9:00-10:30', examDate: '18/8/2025' },
-
-  // السنة الثالثة - الفصل الأول (7 مواد)
-  { id: '3-1-1', name: 'رسوميات حاسوبية م', year: 3, semester: 1, examTime: '11:30-1:00', examDate: '10/8/2025' },
-  { id: '3-1-2', name: 'نظرية المخططات م', year: 3, semester: 1, examTime: '11:30-1:00', examDate: '28/8/2025' },
-  { id: '3-1-3', name: 'معالجة الإشارة', year: 3, semester: 1, examTime: '9:00-11:00', examDate: '13/8/2025' },
-  { id: '3-1-4', name: 'خوارزميات 2 م', year: 3, semester: 1, examTime: '11:30-1:00', examDate: '29/7/2025' },
-  { id: '3-1-5', name: 'معالج مصغر م', year: 3, semester: 1, examTime: '11:30-1:00', examDate: '7/8/2025' },
-  { id: '3-1-6', name: 'نظرية المعلومات', year: 3, semester: 1, examTime: '9:00-11:00', examDate: '19/8/2025' },
-  { id: '3-1-7', name: 'قواعد معطيات 1 م', year: 3, semester: 1, examTime: '11:30-1:00', examDate: '3/8/2025' },
-
-  // السنة الثالثة - الفصل الثاني (7 مواد)
-  { id: '3-2-1', name: 'مبادئ الذكاء الصنعي م', year: 3, semester: 2, examTime: '9:00-10:30', examDate: '2/9/2025' },
-  { id: '3-2-2', name: 'اتصالات تشابهية ورقمية', year: 3, semester: 2, examTime: '9:00-11:00', examDate: '5/8/2025' },
-  { id: '3-2-3', name: 'شبكات حاسوبية م', year: 3, semester: 2, examTime: '2:00-3:30', examDate: '27/7/2025' },
-  { id: '3-2-4', name: 'خوارزميات 3 م', year: 3, semester: 2, examTime: '11:30-1:00', examDate: '11/8/2025' },
-  { id: '3-2-5', name: 'بنية وتنظيم الحاسب 1 م', year: 3, semester: 2, examTime: '9:00-10:30', examDate: '21/8/2025' },
-  { id: '3-2-6', name: 'لغات صورية م', year: 3, semester: 2, examTime: '9:00-10:30', examDate: '17/8/2025' },
-  { id: '3-2-7', name: 'هندسة البرمجيات 1 م', year: 3, semester: 2, examTime: '9:00-10:30', examDate: '30/7/2025' },
-
-  // السنة الرابعة - الفصل الأول (9 مواد)
-  { id: '4-1-1', name: 'نظرية الأرتال م', year: 4, semester: 1, examTime: '11:30-1:00', examDate: '13/8/2025' },
-  { id: '4-1-2', name: 'تصميم مترجمات م', year: 4, semester: 1, examTime: '11:30-1:00', examDate: '30/7/2025' },
-  { id: '4-1-3', name: 'بنية وتنظيم الحاسب 2 م', year: 4, semester: 1, examTime: '2:00-3:30', examDate: '2/9/2025' },
-  { id: '4-1-4', name: 'نظم وسائط متعددة م', year: 4, semester: 1, examTime: '11:30-1:00', examDate: '1/9/2025' },
-  { id: '4-1-5', name: 'نظم تشغيل 1', year: 4, semester: 1, examTime: '11:30-1:30', examDate: '19/8/2025' },
-  { id: '4-1-6', name: 'قواعد معطيات 2 م', year: 4, semester: 1, examTime: '9:00-10:30', examDate: '6/8/2025' },
-  { id: '4-1-7', name: 'شبكات حاسوبية متقدمة', year: 4, semester: 1, examTime: '9:00-11:00', examDate: '6/8/2025' },
-  { id: '4-1-8', name: 'برمجة منطقية', year: 4, semester: 1, examTime: '9:00-11:00', examDate: '6/8/2025' },
-  { id: '4-1-9', name: 'بحوث عمليات م', year: 4, semester: 1, examTime: '9:00-10:30', examDate: '7/8/2025' },
-
-  // السنة الرابعة - الفصل الثاني (8 مواد)
-  { id: '4-2-1', name: 'تسويق وإدارة المشاريع م', year: 4, semester: 2, examTime: '11:30-1:00', examDate: '24/8/2025' },
-  { id: '4-2-2', name: 'نظم تشغيل 2', year: 4, semester: 2, examTime: '11:30-1:30', examDate: '4/8/2025' },
-  { id: '4-2-3', name: 'أمن المعلومات م', year: 4, semester: 2, examTime: '11:30-1:00', examDate: '28/7/2025' },
-  { id: '4-2-4', name: 'نظم رقمية مبرمجة م', year: 4, semester: 2, examTime: '9:00-10:30', examDate: '20/8/2025' },
-  { id: '4-2-5', name: 'شبكات عصبونية ومنطق الترجيح', year: 4, semester: 2, examTime: '9:00-11:00', examDate: '10/8/2025' },
-  { id: '4-2-6', name: 'هندسة البرمجيات 2 م', year: 4, semester: 2, examTime: '9:00-10:30', examDate: '14/8/2025' },
-  { id: '4-2-7', name: 'برمجة تفرعية م', year: 4, semester: 2, examTime: '11:30-1:00', examDate: '3/9/2025' },
-  { id: '4-2-8', name: 'روبوتية', year: 4, semester: 2, examTime: '9:00-11:00', examDate: '31/7/2025' },
-
-  // السنة الخامسة - الفصل الأول (8 مواد)
-  { id: '5-1-1', name: 'أمن الشبكات', year: 5, semester: 1, examTime: '11:30-1:30', examDate: '20/8/2025' },
-  { id: '5-1-2', name: 'تحكم منطقي مبرمج PLC', year: 5, semester: 1, examTime: '9:00-11:00', examDate: '29/7/2025' },
-  { id: '5-1-3', name: 'رؤية حاسوبية', year: 5, semester: 1, examTime: '11:30-1:30', examDate: '20/8/2025' },
-  { id: '5-1-4', name: 'جودة ووثوقية م', year: 5, semester: 1, examTime: '11:30-1:00', examDate: '14/8/2025' },
-  { id: '5-1-5', name: 'هندسة البرمجيات 3 م', year: 5, semester: 1, examTime: '11:30-1:00', examDate: '20/8/2025' },
-  { id: '5-1-6', name: 'نظم خبيرة', year: 5, semester: 1, examTime: '9:00-11:00', examDate: '2/9/2025' },
-  { id: '5-1-7', name: 'نظم موزعة', year: 5, semester: 1, examTime: '9:00-11:00', examDate: '2/9/2025' },
-  { id: '5-1-8', name: 'نمذجة ومحاكاة م', year: 5, semester: 1, examTime: '11:30-1:00', examDate: '7/8/2025' },
-
-  // السنة الخامسة - الفصل الثاني (5 مواد)
-  { id: '5-2-1', name: 'معالجة لغات طبيعية', year: 5, semester: 2, examTime: '11:30-1:30', examDate: '18/8/2025' },
-  { id: '5-2-2', name: 'إدارة نظم إنتاجية م', year: 5, semester: 2, examTime: '9:00-10:30', examDate: '28/8/2025' },
-  { id: '5-2-3', name: 'إدارة الشبكات/ شبكات لاسلكية', year: 5, semester: 2, examTime: '11:30-1:30', examDate: '3/8/2025' },
-  { id: '5-2-4', name: 'تنقيب المعطيات م', year: 5, semester: 2, examTime: '11:30-1:00', examDate: '12/8/2025' },
-  { id: '5-2-5', name: 'نظم الزمن الحقيقي م', year: 5, semester: 2, examTime: '11:30-1:00', examDate: '27/7/2025' },
-];
+let subjects: Subject[] = [];
 
 const Index = () => {
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const loadedSubjects = await loadSubjectsFromCSV();
+      subjects = loadedSubjects;
+      setIsLoading(false);
+    };
+    loadData();
+  }, []);
   const [tableFormat, setTableFormat] = useState<string>('subject-date-time');
   const [textFormat, setTextFormat] = useState<string>('regular');
-  const [tableColor, setTableColor] = useState<string>('blue');
+  const [tableColor, setTableColor] = useState<string>('bluebits');
   const [includeMotivation, setIncludeMotivation] = useState<boolean>(false);
 
   const handleSubjectToggle = (subjectId: string) => {
@@ -204,6 +146,7 @@ const Index = () => {
 
   const createTableHTML = (selectedSubjectData: Subject[], isForImage: boolean = false) => {
     const colorMap = {
+      bluebits: '#414297',
       purple: '#8B5CF6',
       black: '#1F2937',
       pink: '#EC4899',
@@ -480,16 +423,36 @@ const Index = () => {
     `;
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 flex items-center justify-center" dir="rtl">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-xl text-gray-600">جارٍ تحميل البيانات...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4" dir="rtl">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 pt-8 sm:pt-4">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img 
+              src="/youth-logo.png" 
+              alt="Youth Logo" 
+              className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 object-contain drop-shadow-lg transition-all duration-300 hover:scale-105  "
+            />
+          </div>
+          
           <div className="flex items-center justify-center gap-3 mb-4">
             <GraduationCap className="h-12 w-12 text-blue-600" />
-            <h1 className="text-4xl font-bold text-gray-800">مولد جداول الامتحانات</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">مولد جداول الامتحانات</h1>
           </div>
-          <p className="text-xl text-gray-600">أهلاً وسهلاً! اختر موادك واحصل على جدول امتحاناتك المخصص</p>
+          <p className="text-lg sm:text-xl text-gray-600 px-4">أهلاً وسهلاً! اختر موادك واحصل على جدول امتحاناتك المخصص</p>
         </div>
 
         {/* Subject Selection */}
@@ -580,7 +543,7 @@ const Index = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <RadioGroup value={tableFormat} onValueChange={setTableFormat}>
+            <RadioGroup value={tableFormat} onValueChange={setTableFormat} dir='rtl'>
               <div className="flex items-center space-x-2 space-x-reverse">
                 <RadioGroupItem value="subject-date-time" id="subject-date-time" />
                 <Label htmlFor="subject-date-time">مادة - تاريخ - وقت</Label>
@@ -607,7 +570,7 @@ const Index = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Select value={textFormat} onValueChange={setTextFormat}>
+              <Select value={textFormat} onValueChange={setTextFormat} dir='rtl'>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -630,11 +593,12 @@ const Index = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Select value={tableColor} onValueChange={setTableColor}>
+              <Select value={tableColor} onValueChange={setTableColor} dir='rtl'>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="bluebits">BlueBits</SelectItem>
                   <SelectItem value="blue">أزرق</SelectItem>
                   <SelectItem value="green">أخضر</SelectItem>
                   <SelectItem value="purple">بنفسجي</SelectItem>
@@ -678,22 +642,22 @@ const Index = () => {
           <Button 
             onClick={generateTable}
             size="lg"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg transform transition hover:scale-105"
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 text-lg font-semibold rounded-lg shadow-lg transform transition hover:scale-105 mx-2"
             disabled={selectedSubjects.length === 0}
           >
             <Calendar className="h-5 w-5 ml-2" />
-            إنشاء جدول الامتحانات
+            توليد جدول الامتحانات
           </Button>
           
           <Button 
             onClick={downloadAsJPG}
             size="lg"
             variant="outline"
-            className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold rounded-lg shadow-lg"
+            className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold rounded-lg shadow-lg mx-2"
             disabled={selectedSubjects.length === 0}
           >
             <Download className="h-5 w-5 ml-2" />
-            تنزيل الجدول كصورة JPG
+            تنزيل الجدول كصورة
           </Button>
           
           {selectedSubjects.length === 0 && (
