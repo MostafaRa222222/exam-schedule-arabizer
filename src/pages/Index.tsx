@@ -19,6 +19,8 @@ interface Subject {
   examDate: string;
 }
 
+const SUBTITLE = "برنامج الامتحان النظري - الفصل الثاني للعام الدراسي 2024/2025"
+
 const loadSubjectsFromCSV = async (): Promise<Subject[]> => {
   try {
     const response = await fetch('/subjects.csv');
@@ -62,6 +64,30 @@ const Index = () => {
   const [tableColor, setTableColor] = useState<string>('bluebits');
   const [includeMotivation, setIncludeMotivation] = useState<boolean>(false);
 
+  const colorMap = {
+    bluebits: '#414297',
+    purple: '#8B5CF6',
+    black: '#1F2937',
+    pink: '#EC4899',
+    blue: '#3B82F6',
+    green: '#10B981',
+    red: '#EF4444',
+    orange: '#F97316',
+    teal: '#14B8A6',
+    indigo: '#6366F1',
+    amber: '#F59E0B',
+    emerald: '#059669',
+    cyan: '#06B6D4'
+  };
+
+  const fontWeightMap = {
+    extralight: '200',
+    light: '300',
+    regular: '400',
+    semibold: '600',
+    bold: '700'
+  };
+
   const handleSubjectToggle = (subjectId: string) => {
     setSelectedSubjects(prev => 
       prev.includes(subjectId) 
@@ -101,8 +127,7 @@ const Index = () => {
     if (!newWindow) return;
 
     const tableHtml = createTableHTML(selectedSubjectData, false);
-    newWindow.document.write(tableHtml);
-    newWindow.document.close();
+    newWindow.document.documentElement.innerHTML = tableHtml;
   };
 
   const downloadAsJPG = () => {
@@ -119,8 +144,7 @@ const Index = () => {
     tempDiv.style.position = 'absolute';
     tempDiv.style.left = '-9999px';
     tempDiv.style.background = 'white';
-    tempDiv.style.padding = '20px';
-    tempDiv.style.width = '1200px';
+    tempDiv.style.width = '1000px';
     document.body.appendChild(tempDiv);
 
     // Convert to canvas and download as JPG
@@ -128,7 +152,7 @@ const Index = () => {
       backgroundColor: 'white',
       scale: 3,
       useCORS: true,
-      width: 1200,
+      width: 1000,
       height: tempDiv.scrollHeight,
       scrollX: 0,
       scrollY: 0
@@ -145,30 +169,6 @@ const Index = () => {
   };
 
   const createTableHTML = (selectedSubjectData: Subject[], isForImage: boolean = false) => {
-    const colorMap = {
-      bluebits: '#414297',
-      purple: '#8B5CF6',
-      black: '#1F2937',
-      pink: '#EC4899',
-      blue: '#3B82F6',
-      green: '#10B981',
-      red: '#EF4444',
-      orange: '#F97316',
-      teal: '#14B8A6',
-      indigo: '#6366F1',
-      amber: '#F59E0B',
-      emerald: '#059669',
-      cyan: '#06B6D4'
-    };
-
-    const fontWeightMap = {
-      extralight: '200',
-      light: '300',
-      regular: '400',
-      semibold: '600',
-      bold: '700'
-    };
-
     const motivationalQuotes = [
       'بالتوفيق في امتحاناتك! 🌟',
       'النجاح ثمرة الجهد والمثابرة 💪',
@@ -244,7 +244,8 @@ const Index = () => {
         dateSubjects.forEach((subject, subIndex) => {
           tableRows += `
             <tr style="background-color: ${dateIndex % 2 === 0 ? '#f8f9fa' : 'white'};">
-              ${subIndex === 0 ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; vertical-align: middle; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;" rowspan="${dateSubjects.length}">${date}</td>` : ''}
+              ${subIndex === 0 && !isForImage ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; vertical-align: middle; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;" rowspan="${dateSubjects.length}">${date}</td>` : ''}
+              ${isForImage ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;">${date}</td>` : ''}
               <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px;">${subject.name}</td>
               <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; font-weight: 500;">${subject.examTime}</td>
             </tr>
@@ -403,6 +404,7 @@ const Index = () => {
         <div class="container">
           <div class="header">
             <h1>📚 جدول الامتحانات</h1>
+            <p style="color: #666; font-size: 1.1em; font-weight: 500; margin-bottom: 20px;">${SUBTITLE}</p>
             ${!isForImage ? `
             <div class="stats">
               <div class="stat-item">
@@ -442,8 +444,8 @@ const Index = () => {
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <img 
-              src="/youth-logo.png" 
-              alt="Youth Logo" 
+              src="/logo.png" 
+              alt="Logo" 
               className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 object-contain drop-shadow-lg transition-all duration-300 hover:scale-105  "
             />
           </div>
@@ -452,6 +454,7 @@ const Index = () => {
             <GraduationCap className="h-12 w-12 text-blue-600" />
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">مولد جداول الامتحانات</h1>
           </div>
+          <p className="text-sm sm:text-base text-blue-700 font-medium mb-2">${SUBTITLE}</p>
           <p className="text-lg sm:text-xl text-gray-600 px-4">أهلاً وسهلاً! اختر موادك واحصل على جدول امتحاناتك المخصص</p>
         </div>
 
@@ -571,15 +574,15 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <Select value={textFormat} onValueChange={setTextFormat} dir='rtl'>
-                <SelectTrigger>
+                <SelectTrigger style={{fontWeight: fontWeightMap[textFormat]}}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="extralight">خفيف جداً</SelectItem>
-                  <SelectItem value="light">خفيف</SelectItem>
-                  <SelectItem value="regular">عادي</SelectItem>
-                  <SelectItem value="semibold">شبه عريض</SelectItem>
-                  <SelectItem value="bold">عريض</SelectItem>
+                  <SelectItem value="extralight" style={{fontWeight: fontWeightMap['extralight']}}>خفيف جداً</SelectItem>
+                  <SelectItem value="light" style={{fontWeight: fontWeightMap['light']}}>خفيف</SelectItem>
+                  <SelectItem value="regular" style={{fontWeight: fontWeightMap['regular']}}>عادي</SelectItem>
+                  <SelectItem value="semibold" style={{fontWeight: fontWeightMap['semibold']}}>شبه عريض</SelectItem>
+                  <SelectItem value="bold" style={{fontWeight: fontWeightMap['bold']}}>عريض</SelectItem>
                 </SelectContent>
               </Select>
             </CardContent>
@@ -594,23 +597,23 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <Select value={tableColor} onValueChange={setTableColor} dir='rtl'>
-                <SelectTrigger>
+                <SelectTrigger style={{color: colorMap[tableColor]}}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="bluebits">BlueBits</SelectItem>
-                  <SelectItem value="blue">أزرق</SelectItem>
-                  <SelectItem value="green">أخضر</SelectItem>
-                  <SelectItem value="purple">بنفسجي</SelectItem>
-                  <SelectItem value="red">أحمر</SelectItem>
-                  <SelectItem value="pink">وردي</SelectItem>
-                  <SelectItem value="orange">برتقالي</SelectItem>
-                  <SelectItem value="teal">أزرق مخضر</SelectItem>
-                  <SelectItem value="indigo">نيلي</SelectItem>
-                  <SelectItem value="amber">عنبري</SelectItem>
-                  <SelectItem value="emerald">زمردي</SelectItem>
-                  <SelectItem value="cyan">سماوي</SelectItem>
-                  <SelectItem value="black">أسود</SelectItem>
+                  <SelectItem value="bluebits" style={{color: colorMap['bluebits']}}>BlueBits</SelectItem>
+                  <SelectItem value="blue" style={{color: colorMap['blue']}}>أزرق</SelectItem>
+                  <SelectItem value="green" style={{color: colorMap['green']}}>أخضر</SelectItem>
+                  <SelectItem value="purple" style={{color: colorMap['purple']}}>بنفسجي</SelectItem>
+                  <SelectItem value="red" style={{color: colorMap['red']}}>أحمر</SelectItem>
+                  <SelectItem value="pink" style={{color: colorMap['pink']}}>وردي</SelectItem>
+                  <SelectItem value="orange" style={{color: colorMap['orange']}}>برتقالي</SelectItem>
+                  <SelectItem value="teal" style={{color: colorMap['teal']}}>أزرق مخضر</SelectItem>
+                  <SelectItem value="indigo" style={{color: colorMap['indigo']}}>نيلي</SelectItem>
+                  <SelectItem value="amber" style={{color: colorMap['amber']}}>عنبري</SelectItem>
+                  <SelectItem value="emerald" style={{color: colorMap['emerald']}}>زمردي</SelectItem>
+                  <SelectItem value="cyan" style={{color: colorMap['cyan']}}>سماوي</SelectItem>
+                  <SelectItem value="black" style={{color: colorMap['black']}}>أسود</SelectItem>
                 </SelectContent>
               </Select>
             </CardContent>

@@ -54,7 +54,7 @@ src/
 ├── components/ui/         # shadcn/ui components
 public/
 ├── subjects.csv           # The subjects data
-└── youth-logo.png         # Organization logo
+└── logo.png               # Organization logo
 ```
 
 ## License
