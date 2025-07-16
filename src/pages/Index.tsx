@@ -168,6 +168,18 @@ const Index = () => {
     });
   };
 
+  const formatDateWithDay = (dateString: string) => {
+    const [day, month, year] = dateString.split('/');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    
+    const arabicDays = [
+      'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'
+    ];
+    
+    const dayName = arabicDays[date.getDay()];
+    return `${dayName} ${dateString}`;
+  };
+
   const createTableHTML = (selectedSubjectData: Subject[], isForImage: boolean = false) => {
     const motivationalQuotes = [
       'بالتوفيق في امتحاناتك! 🌟',
@@ -214,7 +226,7 @@ const Index = () => {
             ${sortedSubjects.map((subject, index) => `
               <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'}; transition: all 0.3s ease;">
                 <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px;">${subject.name}</td>
-                <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;">${subject.examDate}</td>
+                <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;">${formatDateWithDay(subject.examDate)}</td>
                 <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; font-weight: 500;">${subject.examTime}</td>
               </tr>
             `).join('')}
@@ -244,8 +256,8 @@ const Index = () => {
         dateSubjects.forEach((subject, subIndex) => {
           tableRows += `
             <tr style="background-color: ${dateIndex % 2 === 0 ? '#f8f9fa' : 'white'};">
-              ${subIndex === 0 && !isForImage ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; vertical-align: middle; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;" rowspan="${dateSubjects.length}">${date}</td>` : ''}
-              ${isForImage ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;">${date}</td>` : ''}
+              ${subIndex === 0 && !isForImage ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; vertical-align: middle; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;" rowspan="${dateSubjects.length}">${formatDateWithDay(date)}</td>` : ''}
+              ${isForImage ? `<td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;">${formatDateWithDay(date)}</td>` : ''}
               <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px;">${subject.name}</td>
               <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; font-weight: 500;">${subject.examTime}</td>
             </tr>
@@ -290,7 +302,7 @@ const Index = () => {
               <tr style="background-color: ${index % 2 === 0 ? '#f8f9fa' : 'white'};">
                 <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px; color: ${colorMap[tableColor as keyof typeof colorMap]}; font-weight: 600;">${time}</td>
                 <td style="border: 2px solid #ddd; padding: 15px; text-align: center; font-size: 16px;">
-                  ${timeSubjects.map(s => `${s.name} (${s.examDate})`).join('<br>')}
+                  ${timeSubjects.map(s => `${s.name} (${formatDateWithDay(s.examDate)})`).join('<br>')}
                 </td>
               </tr>
             `).join('')}
