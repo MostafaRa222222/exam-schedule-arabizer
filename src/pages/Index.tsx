@@ -359,6 +359,13 @@ const Index = () => {
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
           }
+          .header h2 {
+            color: ${colorMap[tableColor as keyof typeof colorMap]};
+            margin-bottom: 15px;
+            font-size: 2em;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+          }
           .header p {
             color: #666;
             font-size: 1.3em;
@@ -417,6 +424,7 @@ const Index = () => {
           <div class="header">
             <h1>📚 جدول الامتحانات</h1>
             <p style="color: #666; font-size: 1.1em; font-weight: 500; margin-bottom: 20px;">${SUBTITLE}</p>
+            ${!isForImage && tableColor === 'bluebits' ? '<h2 display: flex; align-items: center; justify-content: center; gap: 8px;">مع تمنيات فريق <img src="/BlueBitsLogo.png" alt="BlueBits" style="height: 1.5em; width: auto; vertical-align: middle;"> لكم بالتوفيق والنجاح!</h2>' : ''}
             ${!isForImage ? `
             <div class="stats">
               <div class="stat-item">
@@ -428,7 +436,7 @@ const Index = () => {
           ${motivationPhrase ? `<div class="motivation">${motivationPhrase}</div>` : ''}
           ${tableContent}
           <div class="note">
-            <p><strong>📝 ملاحظة هامة:</strong> "م" يعني امتحان مؤتمت</p>
+            <p><strong>📝 ملاحظة هامة:</strong> (م) تعني: امتحان مؤتمت</p>
             <p><strong>⚠️ تنبيه:</strong> يُرجى التأكد من مواعيد الامتحان بعد الإنشاء</p>
           </div>
         </div>
