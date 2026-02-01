@@ -19,7 +19,7 @@ interface Subject {
   examDate: string;
 }
 
-const SUBTITLE = "برنامج الامتحان النظري - الفصل الثاني للعام الدراسي 2024-2025"
+const SUBTITLE = "برنامج الامتحان النظري - الفصل الأول للعام الدراسي 2025-2026"
 
 const loadSubjectsFromCSV = async (): Promise<Subject[]> => {
   try {
